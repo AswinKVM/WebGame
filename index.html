@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BreakOut X — Arcade Brick Breaker</title>
+  <meta name="description" content="Play BreakOut X — an arcade-style brick breaker game built with advanced CSS and JavaScript canvas." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Animated Background -->
+  <div class="bg-grid"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="particles" id="particles"></div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="logo">
+      <span class="logo-icon">BX</span>
+      <span class="logo-text">BREAK<span class="accent">OUT</span> X</span>
+    </div>
+    <nav class="nav">
+      <a href="#game" class="nav-link active">Play</a>
+      <a href="#howto" class="nav-link">How To Play</a>
+      <a href="#leaderboard" class="nav-link">Scores</a>
+    </nav>
+    <div class="header-badge">
+      <span class="badge-dot"></span>
+      <span>LIVE</span>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" id="top">
+    <div class="hero-content">
+      <div class="hero-tag">
+        <span>Classic Arcade · Some Assembly Required</span>
+      </div>
+      <h1 class="hero-title">
+        BREAK <br />
+        <span class="gradient-text">EVERY</span> <br />
+        WALL
+      </h1>
+      <p class="hero-subtitle">
+        Some walls are made to come down. Others just need the right angle.<br />
+        Neon visuals, power-ups and physics that hit exactly where it counts.
+      </p>
+      <a href="#game" class="cta-btn">
+        <span class="btn-glow"></span>
+        Make Your Move
+      </a>
+    </div>
+    <div class="hero-visual">
+      <div class="floating-card card-1">BRICKS</div>
+      <div class="floating-card card-2">LEVELS</div>
+      <div class="floating-card card-3">SCORE</div>
+      <div class="hero-art">
+        <canvas id="preview-canvas" width="280" height="280"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- Game Section -->
+  <section class="game-section" id="game">
+    <div class="section-label">
+      <span class="label-line"></span>
+      <span>THE GAME</span>
+      <span class="label-line"></span>
+    </div>
+
+    <div class="game-wrapper">
+      <!-- HUD -->
+      <div class="hud">
+        <div class="hud-item">
+          <span class="hud-label">SCORE</span>
+          <span class="hud-value" id="score-display">0</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">LEVEL</span>
+          <span class="hud-value" id="level-display">1</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">LIVES</span>
+          <span class="hud-value" id="lives-display">3 / 3</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">HI-SCORE</span>
+          <span class="hud-value" id="hi-score-display">0</span>
+        </div>
+      </div>
+
+      <!-- Canvas -->
+      <div class="canvas-container">
+        <canvas id="gameCanvas" width="800" height="520"></canvas>
+        <div class="game-overlay" id="game-overlay">
+          <div class="overlay-card">
+            <div class="overlay-icon" id="overlay-icon">BX</div>
+            <h2 class="overlay-title" id="overlay-title">BREAKOUT X</h2>
+            <p class="overlay-sub" id="overlay-sub">Arrow keys or mouse to move. Space to launch.<br />Some things just need a little push to fall.</p>
+            <button class="play-btn" id="start-btn">
+              <span class="play-btn-glow"></span>
+              START GAME
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Side Panel -->
+      <div class="side-panel">
+        <div class="panel-card controls-card">
+          <h3 class="panel-title">CONTROLS</h3>
+          <div class="ctrl-item"><kbd>Left</kbd><kbd>Right</kbd><span>Move Paddle</span></div>
+          <div class="ctrl-item"><kbd>Space</kbd><span>Launch / Pause</span></div>
+          <div class="ctrl-item"><kbd>R</kbd><span>Restart</span></div>
+          <div class="ctrl-item"><span>Mouse</span><span>Also works</span></div>
+        </div>
+
+        <div class="panel-card score-card">
+          <h3 class="panel-title">BRICK VALUES</h3>
+          <div class="brick-val" style="--bc:#ff6b6b">Red — 10 pts</div>
+          <div class="brick-val" style="--bc:#ffd93d">Gold — 20 pts</div>
+          <div class="brick-val" style="--bc:#6bcb77">Green — 5 pts</div>
+          <div class="brick-val" style="--bc:#4d96ff">Blue — 15 pts</div>
+          <div class="brick-val" style="--bc:#c77dff">Purple — 25 pts</div>
+          <div class="brick-val" style="--bc:#888">Gray — 2 hits</div>
+        </div>
+
+        <div class="panel-card">
+          <h3 class="panel-title">HOW IT WORKS</h3>
+          <p class="panel-note">Clear all bricks to advance. Wide paddle unlocks every other level. Gray bricks need two hits.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How To Play -->
+  <section class="howto-section" id="howto">
+    <div class="section-label">
+      <span class="label-line"></span>
+      <span>HOW TO PLAY</span>
+      <span class="label-line"></span>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <h3>Stay in Control</h3>
+        <p>Arrow keys or move your mouse. The ball goes wherever you guide it — some things just follow your lead naturally.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <h3>Break Through</h3>
+        <p>Clear every brick to advance. The stubborn ones take a few tries — but the right angle always works.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <h3>Use the Wide Paddle</h3>
+        <p>Clear a level and your paddle widens automatically. More reach, more control. Don't waste it.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">04</div>
+        <h3>Leave a Mark</h3>
+        <p>Rack up points across 10 levels. The leaderboard remembers the ones who made an impression.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Leaderboard -->
+  <section class="leaderboard-section" id="leaderboard">
+    <div class="section-label">
+      <span class="label-line"></span>
+      <span>LEADERBOARD</span>
+      <span class="label-line"></span>
+    </div>
+    <div class="lb-card">
+      <table class="lb-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>PLAYER</th>
+            <th>SCORE</th>
+            <th>LEVEL</th>
+          </tr>
+        </thead>
+        <tbody id="lb-body">
+          <tr class="lb-row gold">
+            <td>1</td>
+            <td>Player One</td>
+            <td>12,450</td>
+            <td>8</td>
+          </tr>
+          <tr class="lb-row silver">
+            <td>2</td>
+            <td>NeonRacer</td>
+            <td>9,870</td>
+            <td>6</td>
+          </tr>
+          <tr class="lb-row bronze">
+            <td>3</td>
+            <td>PixelKnight</td>
+            <td>7,200</td>
+            <td>5</td>
+          </tr>
+          <tr class="lb-row">
+            <td>4</td>
+            <td>ArcadeMaster</td>
+            <td>5,650</td>
+            <td>4</td>
+          </tr>
+          <tr class="lb-row">
+            <td>5</td>
+            <td>RetroGamer</td>
+            <td>3,900</td>
+            <td>3</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-logo">BREAKOUT X</div>
+    <p class="footer-sub">Built with advanced CSS and the Canvas API — a tribute to the classic Java Applet era.</p>
+    <div class="footer-links">
+      <a href="#top">Back to Top</a>
+      <a href="#game">Play Now</a>
+    </div>
+  </footer>
+
+  <script src="game.js"></script>
+</body>
+</html>
